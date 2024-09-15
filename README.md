@@ -80,23 +80,22 @@ This project is a web-based application that provides two types of web crawlers 
 3. Click the "Crawl" button.
 4. Wait for the results to be displayed.
 
-## Accessing the Application
+## Deployment
 
-The application can be accessed in several ways:
+This application is containerized and can be deployed to various cloud platforms that support Docker containers. Some options include:
 
-- Localhost: `http://localhost:5001`
-- Loopback IP: `http://127.0.0.1:5001`
-- Local Network: `http://<your-local-ip>:5001` (replace <your-local-ip> with your machine's IP address)
+- Google Cloud Run
+- DigitalOcean App Platform
+- Azure Container Instances
+- AWS Elastic Container Service
 
-## Changing the Port
+To deploy, you'll need to:
 
-To use a different port:
+1. Push your Docker image to a container registry (e.g., Docker Hub, Google Container Registry)
+2. Set up an account with your chosen cloud provider
+3. Follow their specific instructions for deploying a containerized application
 
-1. For local setup, modify the `app.py` file.
-2. For Docker setup, update the `Dockerfile` and run command:
-   ```
-   docker run -p <new-port>:5001 -e PORT=<new-port> web-crawler-app
-   ```
+Note: Make sure to set the `PORT` environment variable on your cloud platform if it's different from 5001.
 
 ## Contributing
 
