@@ -43,42 +43,41 @@ def find_external_links(url, domain):
 
     return external_links
 
-def crawl_domain(domain):
-    internal_links = set()
-    external_links = set()
-    visited = set()
+def crawl_domain(url):
+    try:
+        domain = urlparse(url).netloc
+        visited = set()
+        to_visit = [url]
+        external_links = set()
 
-    def crawl(url):
-        if url in visited:
-            return
-        visited.add(url)
+        while to_visit:
+            current_url = to_visit.pop(0)
+            if current_url in visited:
+                continue
 
-        try:
-            response = make_request(url)
+            visited.add(current_url)
+            response = requests.get(current_url)
             soup = BeautifulSoup(response.text, 'html.parser')
 
             for link in soup.find_all('a'):
                 href = link.get('href')
                 if href:
-                    full_url = urljoin(url, href)
+                    full_url = urljoin(current_url, href)
                     parsed_url = urlparse(full_url)
-                    full_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
-
-                    if parsed_url.netloc == urlparse(domain).netloc:
-                        if full_url not in internal_links and not full_url.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                            internal_links.add(full_url)
-                            crawl(full_url)
+                    if parsed_url.netloc == domain:
+                        if full_url not in visited and full_url not in to_visit:
+                            to_visit.append(full_url)
                     else:
                         external_links.add(full_url)
-        except Exception as e:
-            print(f"An error occurred while crawling {url}: {e}")
 
-    crawl(domain)
-    return list(external_links)
+        return list(external_links)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
 
 def crawl_url(url):
     try:
-        response = make_request(url)
+        response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         base_url = urlparse(url).scheme + "://" + urlparse(url).netloc
         external_links = set()
