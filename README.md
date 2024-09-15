@@ -37,7 +37,7 @@ This project is a web-based application that provides two types of web crawlers 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/web-crawler-project.git
+   git clone https://github.com/samiralibabic/crawlers.git
    cd web-crawler-project
    ```
 
