@@ -4,13 +4,24 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
+import os
+
+def get_proxy_settings():
+    return {
+        'http': os.environ.get('HTTP_PROXY'),
+        'https': os.environ.get('HTTPS_PROXY')
+    } if 'HTTP_PROXY' in os.environ or 'HTTPS_PROXY' in os.environ else None
+
+def make_request(url):
+    proxy_settings = get_proxy_settings()
+    return requests.get(url, proxies=proxy_settings) if proxy_settings else requests.get(url)
 
 def find_external_links(url, domain):
     external_links = set()
     parsed_url = urlparse(url)
 
     try:
-        response = requests.get(url)
+        response = make_request(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         for link in soup.find_all('a'):
             href = link.get('href')
@@ -35,7 +46,7 @@ def crawl_domain(domain):
         visited.add(url)
 
         try:
-            response = requests.get(url)
+            response = make_request(url)
             soup = BeautifulSoup(response.text, 'html.parser')
 
             for link in soup.find_all('a'):
@@ -59,7 +70,7 @@ def crawl_domain(domain):
 
 def crawl_url(url):
     try:
-        response = requests.get(url)
+        response = make_request(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         base_url = urlparse(url).scheme + "://" + urlparse(url).netloc
         external_links = set()
