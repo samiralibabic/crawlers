@@ -1,6 +1,6 @@
 # Web Crawler Project
 
-This project is a web-based application that provides two types of web crawlers to extract external links from websites.
+This project is a web-based application that provides two types of web crawlers to extract external links from websites..
 
 ## Features
 
