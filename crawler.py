@@ -7,14 +7,22 @@ from urllib.parse import urlparse, urljoin
 import os
 
 def get_proxy_settings():
-    return {
-        'http': os.environ.get('HTTP_PROXY'),
-        'https': os.environ.get('HTTPS_PROXY')
-    } if 'HTTP_PROXY' in os.environ or 'HTTPS_PROXY' in os.environ else None
+    username = os.environ.get('PYTHONANYWHERE_SITE_NAME')
+    if username:
+        return {
+            'http': f'http://{username}.pythonanywhere.com',
+            'https': f'https://{username}.pythonanywhere.com'
+        }
+    return None
 
 def make_request(url):
     proxy_settings = get_proxy_settings()
-    return requests.get(url, proxies=proxy_settings) if proxy_settings else requests.get(url)
+    if proxy_settings:
+        session = requests.Session()
+        session.trust_env = False  # Don't use system proxy settings
+        return session.get(url, proxies=proxy_settings)
+    else:
+        return requests.get(url)
 
 def find_external_links(url, domain):
     external_links = set()
