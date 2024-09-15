@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from crawler import crawl_url, crawl_domain
+from github_pull import github_pull_bp
 
 app = Flask(__name__)
+app.register_blueprint(github_pull_bp)
 
 @app.route('/')
 def index():
