@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Crawler</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #results { margin-top: 20px; }
+        .crawler-info { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Web Crawler</h1>
+    <div class="crawler-info">
+        <h2>About the Crawlers</h2>
+        <p><strong>Crawler v1:</strong> This crawler visits the provided URL and extracts external links found on that page only. It does not follow internal links.</p>
+        <p><strong>Crawler v2:</strong> This crawler finds all external links from the entire domain. It visits all internal links and extracts external links from those pages too.</p>
+    </div>
+    <form id="crawlForm">
+        <input type="text" id="url" placeholder="Enter URL or domain" required>
+        <select id="version">
+            <option value="v1">Crawler v1</option>
+            <option value="v2">Crawler v2</option>
+        </select>
+        <button type="submit">Crawl</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('crawlForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+            const version = document.getElementById('version').value;
+            const resultsDiv = document.getElementById('results');
+            
+            resultsDiv.innerHTML = 'Crawling...';
+            
+            try {
+                const response = await axios.post('/crawl', new URLSearchParams({ url, version }));
+                const links = response.data;
+                resultsDiv.innerHTML = '<h2>External Links:</h2><ul>' + 
+                    links.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('') + 
+                    '</ul>';
+            } catch (error) {
+                resultsDiv.innerHTML = 'Error: ' + (error.response ? error.response.data : error.message);
+            }
+        });
+    </script>
+</body>
+</html>
