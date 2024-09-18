@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to the project directory
-cd /home/web-crawler-app
+cd /home/web-crawlers
 
 # Pull the latest changes from the repository
 git pull origin main
