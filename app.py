@@ -7,12 +7,15 @@ from models import db, User
 from billing import create_checkout_session
 from crawler import crawl_url, crawl_domain
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
