@@ -18,9 +18,15 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
+    - name: Debug - Check Secret Availability
+      run: |
+        echo "SECRET_KEY is set: ${{ secrets.SECRET_KEY != '' }}"
+        echo "STRIPE_SECRET_KEY is set: ${{ secrets.STRIPE_SECRET_KEY != '' }}"
+
     - name: Deploy to VPS
       env:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        ssh -o StrictHostKeyChecking=no root@217.160.164.125 'bash -s' < deploy.sh
+        echo "Deploying with secrets..."
+        ssh -o StrictHostKeyChecking=no root@217.160.164.125 "export SECRET_KEY='$SECRET_KEY' && export STRIPE_SECRET_KEY='$STRIPE_SECRET_KEY' && bash -s" < deploy.sh
