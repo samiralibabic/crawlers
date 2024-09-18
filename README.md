@@ -11,6 +11,8 @@ This project is a web-based application that provides two types of web crawlers 
 - Dockerized for consistent deployment
 - Asynchronous crawling process
 - Display of extracted external links
+- User authentication and subscription management
+- Stripe integration for payments
 
 ## Technologies Used
 
@@ -21,12 +23,16 @@ This project is a web-based application that provides two types of web crawlers 
 - HTML/CSS/JavaScript (Frontend)
 - Axios (AJAX requests)
 - Docker
+- SQLite (Database)
+- Stripe (Payment processing)
 
 ## Project Structure
 
 - `app.py`: Main Flask application
 - `crawler.py`: Contains both crawler implementations
-- `templates/index.html`: HTML template for the web interface
+- `billing.py`: Handles Stripe integration for subscriptions
+- `models.py`: Database models
+- `templates/`: HTML templates for the web interface
 - `Dockerfile`: Docker configuration file
 - `requirements.txt`: Python dependencies
 - `.dockerignore` and `.gitignore`: Ignore files for Docker and Git
@@ -81,10 +87,20 @@ This project is a web-based application that provides two types of web crawlers 
 
 ## Usage
 
-1. Enter a URL or domain in the input field.
-2. Select the crawler version (v1 or v2).
-3. Click the "Crawl" button.
-4. Wait for the results to be displayed.
+1. Register an account or log in if you already have one.
+2. Choose a subscription plan (Free or Premium).
+3. Enter a URL or domain in the input field on the home page.
+4. Select the crawler version (v1 or v2).
+5. Click the "Crawl" button.
+6. Wait for the results to be displayed.
+
+## Stripe Integration
+
+This project uses Stripe for handling subscriptions. To set up Stripe:
+
+1. Create a Stripe account and obtain your API keys.
+2. Add your Stripe secret key to the `.env` file.
+3. Update the plan IDs in `app.py` and `templates/profile.html` with your actual Stripe plan IDs.
 
 ## Deployment
 
@@ -94,6 +110,13 @@ This application is containerized and can be deployed to various cloud platforms
 - DigitalOcean App Platform
 - Azure Container Instances
 - AWS Elastic Container Service
+- VPS (Virtual Private Server)
+
+For VPS deployment:
+1. Set up a VPS with your preferred provider (e.g., DigitalOcean, Linode, AWS EC2)
+2. Install Docker on the VPS
+3. Set up GitHub Actions for automatic deployment (see `.github/workflows/deploy.yml`)
+4. Ensure your VPS firewall allows incoming traffic on port 80
 
 To deploy, you'll need to:
 
@@ -105,7 +128,15 @@ Note: Make sure to set the `PORT` environment variable on your cloud platform if
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. When contributing, make sure to:
+
+1. Fork the repository
+2. Create a new branch for your feature
+3. Add your changes
+4. Update tests if necessary
+5. Submit a pull request
+
+Note: Be careful not to commit any sensitive information or environment variables.
 
 ## License
 

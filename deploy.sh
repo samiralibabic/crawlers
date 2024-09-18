@@ -14,4 +14,10 @@ docker stop web-crawler-app || true
 docker rm web-crawler-app || true
 
 # Run the Docker container with environment variables
-docker run -d -p 80:5001 --name web-crawler-app -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" -e SECRET_KEY="$SECRET_KEY" web-crawler-app
+docker run -d -p 80:5001 --name web-crawler-app \
+  -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
+  -e SECRET_KEY="$SECRET_KEY" \
+  web-crawler-app
+
+# Print container logs
+docker logs web-crawler-app

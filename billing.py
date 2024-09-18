@@ -14,7 +14,7 @@ def create_checkout_session(user, plan):
             'quantity': 1,
         }],
         mode='subscription',
-        success_url='http://localhost:5001/success',
-        cancel_url='http://localhost:5001/cancel',
+        success_url='/success',
+        cancel_url='/cancel',
     )
     return session.url

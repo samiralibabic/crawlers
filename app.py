@@ -109,9 +109,6 @@ def crawl():
     current_user.crawls_remaining -= 1
     db.session.commit()
     
-    # Log the external links for debugging
-    print(f"External links: {external_links}")
-    
     return jsonify({"links": external_links})
 
 @app.route('/')
