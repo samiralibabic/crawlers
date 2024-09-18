@@ -23,4 +23,4 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        ssh -o StrictHostKeyChecking=no root@<217.160.164.125> 'bash -s' < deploy.sh
+        ssh -o StrictHostKeyChecking=no root@217.160.164.125 'bash -s' < deploy.sh
