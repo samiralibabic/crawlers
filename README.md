@@ -36,39 +36,45 @@ This project is a web-based application that provides two types of web crawlers 
 ### Local Setup
 
 1. Clone the repository:
-   ```
+   ```sh
    git clone https://github.com/samiralibabic/crawlers.git
    cd web-crawler-project
    ```
 
 2. Create a virtual environment:
-   ```
+   ```sh
    python -m venv venv
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
 3. Install the required packages:
-   ```
+   ```sh
    pip install -r requirements.txt
    ```
 
-4. Run the application:
+4. Create a `.env` file and add your environment variables:
+   ```sh
+   SECRET_KEY=your_secret_key
+   STRIPE_SECRET_KEY=your_stripe_secret_key
    ```
+
+5. Run the application:
+   ```sh
    python app.py
    ```
 
-5. Open a web browser and navigate to `http://localhost:5001`
+6. Open a web browser and navigate to `http://localhost:5001`
 
 ### Docker Setup
 
 1. Build the Docker image:
-   ```
+   ```sh
    docker build -t web-crawler-app .
    ```
 
-2. Run the Docker container:
-   ```
-   docker run -p 5001:5001 web-crawler-app
+2. Run the Docker container with the `.env` file:
+   ```sh
+   docker run --env-file .env -p 5001:5001 web-crawler-app
    ```
 
 3. Open a web browser and navigate to `http://localhost:5001`

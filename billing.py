@@ -1,6 +1,10 @@
 import stripe
+import os
+from dotenv import load_dotenv
 
-stripe.api_key = 'sk_test_51NHtKhGWWC4TWCaW3qnVFCeC5FXmQYrvpr2XJPU8An4nWlKxO8HWUOfI7WLQI9LAl0FPzqp3NF46DOlxUOlC6QLH00wsVFVVve'
+load_dotenv()
+
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 def create_checkout_session(user, plan):
     session = stripe.checkout.Session.create(
