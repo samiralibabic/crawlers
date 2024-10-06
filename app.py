@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = os.random(24)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
