@@ -66,7 +66,7 @@ def profile():
 def subscribe():
     plan = request.form.get('plan')
     print(f"Selected plan: {plan}")
-    if plan not in ['price_1Q08blGWWC4TWCaWYbdk4rol', 'price_1Q08cUGWWC4TWCaWNuYIC7g1']:
+    if plan not in ['price_1QC1n4GWWC4TWCaW4EemlNOB', 'price_1QC1n4GWWC4TWCaWT2JZ3TEy']:
         return redirect(url_for('profile'))
     plan = request.form.get('plan')
     checkout_url = create_checkout_session(current_user, plan)
@@ -75,12 +75,12 @@ def subscribe():
 @app.route('/success')
 @login_required
 def success():
-    if current_user.subscription_plan == 'price_1Q08cUGWWC4TWCaWNuYIC7g1':
+    if current_user.subscription_plan == 'price_1QC1n4GWWC4TWCaWT2JZ3TEy':
         current_user.subscription_plan = 'premium'
-        current_user.crawls_remaining = 1000
+        current_user.crawls_remaining = 100
     else:
         current_user.subscription_plan = 'free'
-        current_user.crawls_remaining = 100
+        current_user.crawls_remaining = 10
     db.session.commit()
     return render_template('success.html')
 

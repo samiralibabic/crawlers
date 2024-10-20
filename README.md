@@ -74,12 +74,12 @@ This project is a web-based application that provides two types of web crawlers 
 
 1. Build the Docker image:
    ```
-   docker build -t web-crawler-app .
+   docker build -t crawler .
    ```
 
 2. Run the Docker container:
    ```
-   docker run --name web-crawler-app --env-file .env -p 5001:5001 web-crawler-app
+   docker run --name crawler --env-file .env -p 5001:5001 crawler
    ```
 
 3. Open a web browser and navigate to `http://localhost:5001`

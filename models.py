@@ -9,4 +9,4 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     subscription_plan = db.Column(db.String(50), nullable=False, default='free')
-    crawls_remaining = db.Column(db.Integer, nullable=False, default=100)
+    crawls_remaining = db.Column(db.Integer, nullable=False, default=10)
