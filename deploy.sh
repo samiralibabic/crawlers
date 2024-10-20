@@ -13,10 +13,14 @@ docker build -t crawler .
 docker stop crawler || true
 docker rm crawler || true
 
+# Create instance folder inside the host
+mkdir -p ./instance
+
 # Run the Docker container with environment variables
 docker run -d -p 5001:5001 --name crawler \
   -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
   -e SECRET_KEY="$SECRET_KEY" \
+  -v /home/crawler/instance:/app/instance \
   crawler
 
 # Print container logs
