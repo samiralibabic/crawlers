@@ -52,12 +52,23 @@ This project is a web-based application that provides two types of web crawlers 
    pip install -r requirements.txt
    ```
 
-4. Run the application:
+4. Initialize the Database:
+   Ensure the `instance` directory exists:
+   ```bash
+   mkdir -p instance
+   ```
+
+   Run the database migrations to set up the database:
+   ```bash
+   flask db upgrade
+   ```
+
+5. Run the application:
    ```
    python app.py
    ```
 
-5. Open a web browser and navigate to `http://localhost:5001`
+6. Open a web browser and navigate to `http://localhost:5001`
 
 ### Docker Setup
 
