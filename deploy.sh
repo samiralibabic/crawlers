@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Navigate to the project directory
-cd /home/web-crawlers
+cd /home/crawler
 
 # Pull the latest changes from the repository
 git pull origin main
 
 # Build the Docker image
-docker build -t web-crawler-app .
+docker build -t crawler .
 
 # Stop the existing container
-docker stop web-crawler-app || true
-docker rm web-crawler-app || true
+docker stop crawler || true
+docker rm crawler || true
 
 # Run the Docker container with environment variables
-docker run -d -p 5002:5001 --name web-crawler-app \
+docker run -d -p 5001:5001 --name crawler \
   -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
   -e SECRET_KEY="$SECRET_KEY" \
-  web-crawler-app
+  crawler
 
 # Print container logs
-docker logs web-crawler-app
+docker logs crawler
