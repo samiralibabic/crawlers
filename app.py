@@ -26,6 +26,18 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route('/imprint')
+def imprint():
+    return render_template('imprint.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/')
+def landing():
+    return render_template('landing.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -54,7 +66,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('landing'))
 
 @app.route('/profile')
 @login_required
@@ -112,10 +124,16 @@ def crawl():
     
     return jsonify({"links": external_links})
 
-@app.route('/')
+@app.route('/index')
 @login_required
 def index():
     return render_template('index.html')
+
+@app.route('/')
+def home():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    return redirect(url_for('landing'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
