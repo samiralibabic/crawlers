@@ -3,7 +3,7 @@
 SECRET_KEY="$1"
 STRIPE_SECRET_KEY="$2"
 
-cd /path/to/crawler || exit
+cd /home/crawler || exit
 
 git pull origin main || { echo "Git pull failed"; exit 1; }
 
