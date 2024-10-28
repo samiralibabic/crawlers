@@ -9,6 +9,7 @@ ENV PORT 5001
 WORKDIR /app
 
 RUN mkdir -p /app/instance
+RUN mkdir -p /app/migrations/versions
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
