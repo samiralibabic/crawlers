@@ -1,27 +1,18 @@
 #!/bin/bash
 
-# Navigate to the project directory
-cd /home/crawler
+SECRET_KEY="$1"
+STRIPE_SECRET_KEY="$2"
 
-# Pull the latest changes from the repository
-git pull origin main
+cd /path/to/crawler || exit
 
-# Build the Docker image
-docker build -t crawler .
+git pull origin main || { echo "Git pull failed"; exit 1; }
 
-# Stop the existing container
-docker stop crawler || true
-docker rm crawler || true
+docker-compose build || { echo "Build failed"; exit 1; }
 
-# Create instance folder inside the host
-mkdir -p ./instance
+docker-compose down
 
-# Run the Docker container with environment variables
-docker run -d -p 5001:5001 --name crawler \
-  -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
+docker-compose up -d \
   -e SECRET_KEY="$SECRET_KEY" \
-  -v /home/crawler/instance:/app/instance \
-  crawler
+  -e STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" || { echo "Failed to start crawler"; exit 1; }
 
-# Print container logs
-docker logs crawler
+echo "Deployment complete for Crawler"

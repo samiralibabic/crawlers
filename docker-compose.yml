@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  crawler:
+    build: .
+    environment:
+      - STRIPE_SECRET_KEY
+      - SECRET_KEY
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./instance:/app/instance
+    networks:
+      - caddy_net
+    restart: unless-stopped
+
+networks:
+  caddy_net:
+    external: true
