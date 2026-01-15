@@ -1,67 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Profile</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        html, body {
-            height: 100%;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        .content {
-            flex: 1;
-        }
-        .footer {
-            background-color: #f8f9fa;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your profile · PulseCrawler</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Web Crawler</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item {% if request.path == '/profile' %}active{% endif %}">
-                    <a class="nav-link" href="/profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
+  <div class="page">
+    <header>
+      <div class="container nav">
+        <a class="logo" href="/">
+          <span class="logo-mark">P</span>
+          <span>PulseCrawler</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/">Workspace</a>
+          <a class="active" href="/profile">Profile</a>
+        </nav>
+        <div class="nav-cta">
+          <a class="btn btn-outline" href="/logout">Log out</a>
         </div>
-    </nav>
-    <div class="container mt-4 content">
-        <h1 class="my-4">Welcome, {{ user.username }}</h1>
-        <p>Email: {{ user.email }}</p>
-        <p>Subscription Plan: {{ user.subscription_plan }}</p>
-        <p>Crawls Remaining: {{ user.crawls_remaining }}</p>
-        <form method="POST" action="/subscribe">
-            <div class="form-group">
-                <select name="plan" class="form-control">
-                    <option value="price_1QC1n4GWWC4TWCaW4EemlNOB">Free</option>
-                    <option value="price_1QC1n4GWWC4TWCaWT2JZ3TEy">Premium</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-        <a href="/logout" class="btn btn-secondary mt-3">Logout</a>
-    </div>
-    <footer class="footer mt-auto py-3">
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="app-hero">
         <div class="container">
-            <span class="text-muted">© 2024 Web Crawler. All rights reserved.</span>
+          <h1>Welcome, {{ user.username }}.</h1>
+          <p>Manage your subscription and keep track of your remaining crawls.</p>
         </div>
+      </section>
+
+      <section class="app-section">
+        <div class="container stack">
+          <div class="card">
+            <h2>Account overview</h2>
+            <div class="form-stack">
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Subscription plan:</strong> {{ user.subscription_plan }}</p>
+              <p><strong>Crawls remaining:</strong> {{ user.crawls_remaining }}</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Update subscription</h3>
+            <form method="POST" action="/subscribe" class="form-stack">
+              <div>
+                <label for="plan">Plan</label>
+                <select id="plan" name="plan">
+                  <option value="price_1QC1n4GWWC4TWCaW4EemlNOB">Free</option>
+                  <option value="price_1QC1n4GWWC4TWCaWT2JZ3TEy">Premium</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Update plan</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <span>© 2024 PulseCrawler. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="/privacy">Privacy</a>
+          <a href="/imprint">Imprint</a>
+        </div>
+      </div>
     </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </div>
 </body>
 </html>
