@@ -1,102 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Crawler</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #results { margin-top: 20px; }
-        .crawler-info { margin-bottom: 20px; }
-        html, body {
-            height: 100%;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        .content {
-            flex: 1;
-        }
-        .footer {
-            background-color: #f8f9fa;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseCrawler Workspace</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Web Crawler</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item {% if request.path == '/profile' %}active{% endif %}">
-                    <a class="nav-link" href="/profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
+  <div class="page">
+    <header>
+      <div class="container nav">
+        <div class="logo">
+          <span class="logo-mark">P</span>
+          <span>PulseCrawler</span>
         </div>
-    </nav>
-    <div class="container mt-4 content">
-        <h1 class="my-4">Web Crawler</h1>
-        <div class="crawler-info">
-            <h2>About the Crawlers</h2>
-            <p><strong>Crawler v1:</strong> This crawler visits the provided URL and extracts external links found on that page only. It does not follow internal links.</p>
-            <p><strong>Crawler v2:</strong> This crawler finds all external links from the entire domain. It visits all internal links and extracts external links from those pages too.</p>
+        <nav class="nav-links">
+          <a class="active" href="/">Workspace</a>
+          <a href="/profile">Profile</a>
+        </nav>
+        <div class="nav-cta">
+          <a class="btn btn-outline" href="/logout">Log out</a>
         </div>
-        <form id="crawlForm" class="form-inline">
-            <input type="text" id="url" class="form-control mb-2 mr-sm-2" placeholder="Enter URL or domain" required>
-            <select id="version" class="form-control mb-2 mr-sm-2">
-                <option value="v1">Crawler v1</option>
-                <option value="v2">Crawler v2</option>
-            </select>
-            <button type="submit" class="btn btn-primary mb-2">Crawl</button>
-        </form>
-        <div id="results"></div>
-    </div>
-    <footer class="footer mt-auto py-3">
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="app-hero">
         <div class="container">
-            <span class="text-muted">© 2024 Web Crawler. All rights reserved.</span>
+          <h1>Launch fast, reliable external link crawls.</h1>
+          <p>Use the workspace to run focused single-page audits or full-domain link intelligence reports, all in the
+            same PulseCrawler experience.</p>
         </div>
+      </section>
+
+      <section class="app-section">
+        <div class="container stack">
+          <div class="card">
+            <h2>Start a crawl</h2>
+            <p class="helper-text">Choose the crawl depth and target URL to generate a fresh report.</p>
+            <form id="crawlForm" class="form-stack">
+              <div class="form-row">
+                <div>
+                  <label for="url">Target URL or domain</label>
+                  <input type="text" id="url" placeholder="https://example.com" required>
+                </div>
+                <div>
+                  <label for="version">Crawler version</label>
+                  <select id="version">
+                    <option value="v1">Crawler v1 · Single page</option>
+                    <option value="v2">Crawler v2 · Entire domain</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">Start crawl</button>
+              </div>
+            </form>
+            <div id="results" class="results"></div>
+          </div>
+
+          <div class="card">
+            <h3>How the crawlers differ</h3>
+            <div class="form-stack">
+              <p><strong>Crawler v1</strong> scans the single URL you provide and reports every external link found on
+                that page.</p>
+              <p><strong>Crawler v2</strong> explores the full domain, visiting internal pages to uncover outbound links
+                at scale.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <span>© 2024 PulseCrawler. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="/privacy">Privacy</a>
+          <a href="/imprint">Imprint</a>
+        </div>
+      </div>
     </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        document.getElementById('crawlForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const url = document.getElementById('url').value;
-            const version = document.getElementById('version').value;
-            const resultsDiv = document.getElementById('results');
-            
-            resultsDiv.innerHTML = 'Crawling...';
-            
-            try {
-                const response = await axios.post('/crawl', new URLSearchParams({ url, version }));
-                const data = response.data;
-                
-                // Log the response for debugging
-                console.log('Response:', data);
-                
-                if (Array.isArray(data.links)) {
-                    resultsDiv.innerHTML = '<h2>External Links:</h2><ul>' + 
-                        data.links.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('') + 
-                        '</ul>';
-                } else {
-                    resultsDiv.innerHTML = 'Error: ' + (data.error || 'Unexpected response format');
-                }
-            } catch (error) {
-                resultsDiv.innerHTML = 'Error: ' + (error.response ? error.response.data : error.message);
-            }
-        });
-    </script> 
+  </div>
+
+  <script>
+    document.getElementById('crawlForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      const version = document.getElementById('version').value;
+      const resultsDiv = document.getElementById('results');
+
+      resultsDiv.innerHTML = 'Crawling...';
+
+      try {
+        const response = await axios.post('/crawl', new URLSearchParams({ url, version }));
+        const data = response.data;
+
+        console.log('Response:', data);
+
+        if (Array.isArray(data.links)) {
+          resultsDiv.innerHTML = '<h3>External links</h3><ul>' +
+            data.links.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('') +
+            '</ul>';
+        } else {
+          resultsDiv.innerHTML = 'Error: ' + (data.error || 'Unexpected response format');
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = 'Error: ' + (error.response ? error.response.data : error.message);
+      }
+    });
+  </script>
 </body>
 </html>

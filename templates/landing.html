@@ -110,6 +110,7 @@
       align-items: center;
       justify-content: center;
       padding: 12px 20px;
+      min-height: 44px;
       border-radius: 999px;
       font-weight: 600;
       font-size: 0.95rem;
@@ -405,6 +406,24 @@
 
       .cta {
         padding: 36px 24px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-wrap: wrap;
+      }
+
+      .nav-cta {
+        width: 100%;
+      }
+
+      .nav-cta .btn {
+        flex: 1 1 0;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
       }
     }
   </style>
