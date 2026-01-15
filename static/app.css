@@ -256,8 +256,15 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .nav {
+    flex-wrap: wrap;
+  }
+
   .nav-links {
-    display: none;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 16px;
   }
 
   .app-hero {
@@ -266,10 +273,6 @@ footer {
 }
 
 @media (max-width: 640px) {
-  .nav {
-    flex-wrap: wrap;
-  }
-
   .nav-cta {
     width: 100%;
   }
