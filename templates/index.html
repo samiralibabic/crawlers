@@ -107,7 +107,13 @@
           resultsDiv.innerHTML = 'Error: ' + (data.error || 'Unexpected response format');
         }
       } catch (error) {
-        resultsDiv.innerHTML = 'Error: ' + (error.response ? error.response.data : error.message);
+        const responseData = error.response ? error.response.data : null;
+        const errorMessage = responseData?.error
+          || responseData?.message
+          || (typeof responseData === 'string' ? responseData : null)
+          || error.message;
+
+        resultsDiv.innerHTML = `Error: ${errorMessage}`;
       }
     });
   </script>
