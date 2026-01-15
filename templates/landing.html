@@ -1,168 +1,627 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Crawler - Fast & Efficient External Link Extraction</title>
+  <title>PulseCrawler — External Link Intelligence for Modern Teams</title>
   <meta name="description"
-    content="Web Crawler helps you extract external links quickly and efficiently. Choose between single-page or domain-wide crawling to gather valuable external link data.">
-  <meta name="keywords" content="web crawler, external link extractor, web crawling tool, domain crawling">
+    content="PulseCrawler is a fast, reliable external link intelligence platform. Audit, monitor, and export outbound link data from any page or entire domains in minutes.">
+  <meta name="keywords" content="web crawler, external link monitoring, link intelligence, outbound link audit">
   <meta name="robots" content="index, follow">
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
+    :root {
+      --bg: #0b0f19;
+      --bg-soft: #121827;
+      --text: #e6e9f2;
+      --muted: #a8b0c2;
+      --primary: #5b7cfa;
+      --primary-strong: #3c5ae8;
+      --accent: #15c39a;
+      --card: #161d2f;
+      --stroke: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(5, 11, 24, 0.35);
     }
 
-    .wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 0 24px;
     }
 
     header {
-      background-color: #333;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--stroke);
     }
 
-    h1 {
-      margin: 0;
-      font-size: 2.5em;
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: grid;
+      place-items: center;
+      color: #0b0f19;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-cta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      border-color: var(--stroke);
+      color: var(--text);
+      background: transparent;
     }
 
     .hero {
-      text-align: center;
-      padding: 50px 0;
-      background-color: #007BFF;
-      color: white;
+      padding: 100px 0 80px;
+      background: radial-gradient(circle at top right, rgba(91, 124, 250, 0.25), transparent 45%),
+        radial-gradient(circle at top left, rgba(21, 195, 154, 0.2), transparent 40%);
     }
 
-    .hero h2 {
-      font-size: 2.5em;
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 5vw, 3.9rem);
+      line-height: 1.1;
       margin-bottom: 20px;
     }
 
     .hero p {
-      font-size: 1.2em;
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 520px;
     }
 
-    .cta-button {
-      display: block;
-      width: 200px;
-      background-color: #28a745;
-      color: white;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 60px auto;
-      text-decoration: none;
-    }
-
-    .features {
+    .hero-actions {
       display: flex;
-      justify-content: space-around;
-      padding: 50px 0;
-      background-color: white;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 28px;
     }
 
-    .feature {
-      max-width: 300px;
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .stat-card {
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero-panel {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel h3 {
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .hero-panel ul {
+      list-style: none;
+      display: grid;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .hero-panel li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .hero-panel li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 20px 22px;
+      border: 1px solid var(--stroke);
+    }
+
+    .timeline-step span {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #0b0f19;
+      background: linear-gradient(135deg, var(--accent), #6ee7d0);
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .price-card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 28px;
+      border: 1px solid var(--stroke);
+      display: grid;
+      gap: 16px;
+    }
+
+    .price-card.highlight {
+      border: 1px solid rgba(91, 124, 250, 0.6);
+      box-shadow: var(--shadow);
+    }
+
+    .price-card h3 {
+      font-size: 1.2rem;
+    }
+
+    .price-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .price-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .testimonial {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .testimonial strong {
+      color: var(--text);
+    }
+
+    .cta {
+      background: linear-gradient(135deg, rgba(91, 124, 250, 0.2), rgba(21, 195, 154, 0.2));
+      border: 1px solid var(--stroke);
+      border-radius: 28px;
+      padding: 48px;
       text-align: center;
     }
 
-    .feature h3 {
-      margin-bottom: 20px;
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      margin-bottom: 12px;
     }
 
-    .steps {
-      text-align: center;
-      padding: 50px 0;
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 24px;
     }
 
-    .steps h2 {
-      margin-bottom: 20px;
+    footer {
+      border-top: 1px solid var(--stroke);
+      padding: 32px 0 40px;
+      color: var(--muted);
     }
 
-    .footer {
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      margin-top: auto;
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
     }
 
-    .footer a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 80px 0 60px;
+      }
+
+      .cta {
+        padding: 36px 24px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrapper">
+  <div class="page">
     <header>
-      <h1>Web Crawler - External Link Extractor</h1>
+      <div class="container nav">
+        <div class="logo">
+          <span class="logo-mark">P</span>
+          <span>PulseCrawler</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#insights">Insights</a>
+        </nav>
+        <div class="nav-cta">
+          <a class="btn btn-outline" href="/login">Sign in</a>
+          <a class="btn btn-primary" href="/register">Start free</a>
+        </div>
+      </div>
     </header>
 
-    <div class="hero">
-      <h2>Discover and Extract Valuable External Links with Our Web Crawler</h2>
-      <p>Our web crawler makes it easy to gather external links from any page or entire domain, improving your SEO and
-        research.</p>
-      <a href="/login" class="cta-button">Get Started with the Web Crawler</a>
-    </div>
-
-    <div class="container">
-      <section class="features">
-        <div class="feature">
-          <h3>Simple and Fast Web Crawler</h3>
-          <p>Use Crawler v1 to quickly scan any page for external links without navigating through internal pages. Perfect
-            for fast, accurate link extraction.</p>
-        </div>
-        <div class="feature">
-          <h3>Deep Crawling Across Entire Domains</h3>
-          <p>Crawler v2 allows you to scan an entire domain, following all internal links and extracting external links
-            from all available pages.</p>
-        </div>
-        <div class="feature">
-          <h3>Choose Your Crawling Method</h3>
-          <p>With our web crawler, you can pick between single-page (Crawler v1) or domain-wide crawling (Crawler v2)
-            depending on your needs.</p>
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">External link intelligence</p>
+            <h1>Turn every outbound link into a measurable growth opportunity.</h1>
+            <p>PulseCrawler helps revenue, SEO, and compliance teams uncover every external link across your web
+              properties. Crawl a single page or an entire domain, export structured data, and keep a living audit trail
+              without endless manual checks.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="/register">Launch your first crawl</a>
+              <a class="btn btn-outline" href="/login">View demo workspace</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-card">
+                <span>3x</span>
+                Faster audits with automated link discovery.
+              </div>
+              <div class="stat-card">
+                <span>98%</span>
+                Coverage across high-volume site structures.
+              </div>
+              <div class="stat-card">
+                <span>24/7</span>
+                Always-on monitoring for outbound changes.
+              </div>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <h3>What you can do today</h3>
+            <ul>
+              <li>Capture every outbound link and anchor in a single structured export.</li>
+              <li>Compare page-level vs. domain-wide crawls with instant versioning.</li>
+              <li>Spot compliance risks, broken partner links, and lost attribution.</li>
+              <li>Share polished reports with your team or clients in minutes.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section class="steps">
-        <h2>How Our Web Crawler Works</h2>
-        <p><strong>Step 1:</strong> Enter the URL or domain you want to crawl.</p>
-        <p><strong>Step 2:</strong> Select Crawler v1 for a single page or Crawler v2 for a full domain scan.</p>
-        <p><strong>Step 3:</strong> Click "Crawl" to get immediate results from the web crawler.</p>
+      <section id="features">
+        <div class="container">
+          <div class="section-title">
+            <h2>Built for teams that need reliable link intelligence</h2>
+            <p>From marketing operations to SEO agencies, PulseCrawler delivers a single source of truth for outbound
+              link activity.</p>
+          </div>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3>Single-page speed</h3>
+              <p>Run a focused crawl with version 1 to capture all external links on a single URL in seconds.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Domain-wide depth</h3>
+              <p>Use version 2 to traverse every internal page and surface outbound relationships at scale.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Export-ready data</h3>
+              <p>Download structured link outputs for BI, client reporting, or compliance documentation.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Always-on monitoring</h3>
+              <p>Track outbound changes over time and respond to partner or policy issues before they impact revenue.</p>
+            </div>
+          </div>
+        </div>
       </section>
-    </div>
 
-    <footer class="footer">
-      <p>© 2023 Web Crawler. All rights reserved.</p>
-      <a href="/imprint">Imprint</a>
-      <a href="/privacy">Privacy Policy</a>
+      <section id="workflow">
+        <div class="container">
+          <div class="section-title">
+            <h2>A workflow your team can adopt in minutes</h2>
+            <p>Make crawling a repeatable, shareable process with clear steps and transparent results.</p>
+          </div>
+          <div class="timeline">
+            <div class="timeline-step">
+              <span>1</span>
+              <div>
+                <h3>Connect your target</h3>
+                <p>Paste the page or domain you want to audit. PulseCrawler handles the rest with secure crawling
+                  guidelines.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <span>2</span>
+              <div>
+                <h3>Select the crawl depth</h3>
+                <p>Choose a quick page-level sweep or a deep domain crawl depending on how much coverage you need.</p>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <span>3</span>
+              <div>
+                <h3>Share and action insights</h3>
+                <p>Export results, highlight partner links, and set follow-ups with stakeholders in a single report.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing">
+        <div class="container">
+          <div class="section-title">
+            <h2>Simple plans for growing link programs</h2>
+            <p>Start with the essentials and upgrade when you need more volume or advanced monitoring.</p>
+          </div>
+          <div class="pricing">
+            <div class="price-card">
+              <h3>Starter</h3>
+              <p class="price-value">Free</p>
+              <p>Perfect for ad-hoc audits or one-off partner reviews.</p>
+              <ul>
+                <li>10 crawls per month</li>
+                <li>Single-page focus</li>
+                <li>CSV export</li>
+              </ul>
+            </div>
+            <div class="price-card highlight">
+              <h3>Growth</h3>
+              <p class="price-value">$29/mo</p>
+              <p>Built for marketing teams managing multiple campaigns.</p>
+              <ul>
+                <li>100 crawls per month</li>
+                <li>Full domain crawling</li>
+                <li>Priority support</li>
+              </ul>
+            </div>
+            <div class="price-card">
+              <h3>Enterprise</h3>
+              <p class="price-value">Custom</p>
+              <p>Advanced monitoring, SLAs, and dedicated onboarding.</p>
+              <ul>
+                <li>Unlimited crawls</li>
+                <li>White-glove audits</li>
+                <li>Dedicated success team</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="insights">
+        <div class="container">
+          <div class="section-title">
+            <h2>Trusted by teams who live in the details</h2>
+            <p>See how marketing and compliance leaders keep control of outbound link risk.</p>
+          </div>
+          <div class="testimonials">
+            <div class="testimonial">
+              <p>"PulseCrawler cut our outbound link audit from two days to two hours. We finally have a living map of
+                our partner ecosystem."</p>
+              <strong>Alex Morgan — SEO Lead</strong>
+            </div>
+            <div class="testimonial">
+              <p>"We needed visibility into affiliate placements across thousands of pages. The domain crawler delivered
+                clean exports we could act on immediately."</p>
+              <strong>Priya Desai — Growth Operations</strong>
+            </div>
+            <div class="testimonial">
+              <p>"Compliance reviews are no longer reactive. Our team gets a single report and clear changes every
+                sprint."</p>
+              <strong>Marco Hernandez — Legal & Risk</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="cta">
+            <h2>Ready to make outbound links a strategic advantage?</h2>
+            <p>Launch a crawl today and see every external relationship across your web presence in minutes.</p>
+            <a class="btn btn-primary" href="/register">Start free with PulseCrawler</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <div class="logo">
+          <span class="logo-mark">P</span>
+          <span>PulseCrawler</span>
+        </div>
+        <div class="footer-links">
+          <a href="/imprint">Imprint</a>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
+        <span>© 2024 PulseCrawler. All rights reserved.</span>
+      </div>
     </footer>
   </div>
 </body>
