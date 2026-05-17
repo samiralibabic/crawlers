@@ -5,12 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+stripe.api_key = STRIPE_SECRET_KEY
 
 def create_checkout_session(user, plan):
     # Get the base URL from the current request
     base_url = request.url_root.rstrip('/')
-    
+
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{

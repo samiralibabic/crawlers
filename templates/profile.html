@@ -49,8 +49,9 @@
               <div>
                 <label for="plan">Plan</label>
                 <select id="plan" name="plan">
-                  <option value="price_1QC1n4GWWC4TWCaW4EemlNOB">Free</option>
-                  <option value="price_1QC1n4GWWC4TWCaWT2JZ3TEy">Premium</option>
+                  {% for plan in plans %}
+                  <option value="{{ plan.price_id }}">{{ plan.label }}</option>
+                  {% endfor %}
                 </select>
               </div>
               <button type="submit" class="btn btn-primary">Update plan</button>

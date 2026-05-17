@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
@@ -21,6 +21,20 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+PLAN_OPTIONS = [
+    {
+        'name': 'free',
+        'label': 'Free',
+        'price_id': os.getenv('STRIPE_PRICE_FREE', 'price_1TYBz7Cj4JvUQsAzcWExOFDM'),
+    },
+    {
+        'name': 'premium',
+        'label': 'Premium',
+        'price_id': os.getenv('STRIPE_PRICE_PREMIUM', 'price_1TYBz7Cj4JvUQsAz653JSI46'),
+    },
+]
+PLAN_BY_PRICE_ID = {plan['price_id']: plan for plan in PLAN_OPTIONS}
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -71,23 +85,25 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', user=current_user)
+    return render_template('profile.html', user=current_user, plans=PLAN_OPTIONS)
 
 @app.route('/subscribe', methods=['POST'])
 @login_required
 def subscribe():
     plan = request.form.get('plan')
     print(f"Selected plan: {plan}")
-    if plan not in ['price_1QC1n4GWWC4TWCaW4EemlNOB', 'price_1QC1n4GWWC4TWCaWT2JZ3TEy']:
+    selected_plan = PLAN_BY_PRICE_ID.get(plan)
+    if not selected_plan:
         return redirect(url_for('profile'))
-    plan = request.form.get('plan')
+    session['selected_plan'] = selected_plan['name']
     checkout_url = create_checkout_session(current_user, plan)
     return redirect(checkout_url)
 
 @app.route('/success')
 @login_required
 def success():
-    if current_user.subscription_plan == 'price_1QC1n4GWWC4TWCaWT2JZ3TEy':
+    selected_plan = session.pop('selected_plan', 'free')
+    if selected_plan == 'premium':
         current_user.subscription_plan = 'premium'
         current_user.crawls_remaining = 100
     else:
@@ -99,6 +115,7 @@ def success():
 @app.route('/cancel')
 @login_required
 def cancel():
+    session.pop('selected_plan', None)
     return render_template('cancel.html')
 
 @app.route('/crawl', methods=['POST'])
